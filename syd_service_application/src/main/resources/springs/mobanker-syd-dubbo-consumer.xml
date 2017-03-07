@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+    <!-- <用户中心> -->
+    <dubbo:reference id="dubboBaseinfoManager" interface="com.mobanker.cust.baseinfo.contract.manager.DubboBaseInfoManager" timeout="10000" />
+    <dubbo:reference id="dubboContactInfoManager" interface="com.mobanker.cust.contactinfo.contract.manager.DubboContactInfoManager" timeout="10000" />
+    <dubbo:reference id="dubboSearchByIdCardManager" interface="com.mobanker.cust.searchengine.contract.manager.DubboSearchByIdCardManager" timeout="10000"/>
+    <dubbo:reference id="dubboCardInfoManager" interface="com.mobanker.cust.cardinfo.contract.manager.DubboCardInfoManager" timeout="10000" />
+    <!--<dubbo:reference id="dubboCreditInfoContract" interface="com.mobanker.cust.creditinfo.contract.manager.DubboCreditInfoContract" timeout="10000" />-->
+    <dubbo:reference id="dubboCreditInfoManager" interface="com.mobanker.cust.creditinfo.contract.manager.DubboCreditInfoManager" timeout="10000" />
+    <!--搜索引擎相关-->
+    <dubbo:reference id="dubboSearchByPhoneManager" interface="com.mobanker.cust.searchengine.contract.manager.DubboSearchByPhoneManager" timeout="10000"  />
+    <dubbo:reference id="dubboSearchByCardOrCardMobileManager" interface="com.mobanker.cust.searchengine.contract.manager.DubboSearchByCardOrCardMobileManager" timeout="10000" />
+    <!-- <消息中心> -->
+    <dubbo:reference id="dubboCaptchaContract" interface="com.mobanker.message.contract.manager.DubboCaptchaContract" timeout="100000" />
+    <dubbo:reference id="dubboQueryMessageInfoManager" interface="com.mobanker.message.contract.manager.DubboQueryMessageInfoManager" timeout="100000" />
+    <dubbo:reference id="dubboReplaceMessageInfoManager" interface="com.mobanker.message.contract.manager.DubboReplaceMessageInfoManager" timeout="100000" />
+    <!-- <基础服务> -->
+    <dubbo:reference id="dubboBaseDataManager" interface="com.mobanker.basedata.contract.manager.DubboBaseDataManager" timeout="100000" />
+
+    <!-- 财务相关-->
+    <dubbo:reference id="outApiManager" interface="com.mobanker.tkj.cw.dubboapi.biz.OutApiManager" timeout="100000" />
+    <!-- 产品模板 -->
+    <dubbo:reference id="dubboConfigApiManager" interface="com.mobanker.config.ConfigApiManager" timeout="100000" />
+    <!-- 订单中心 -->
+    <dubbo:reference id="borrowInfoDubboService" interface="com.mobanker.business.dubbo.api.service.BorrowInfoDubboService" timeout="100000" />
+    <dubbo:reference id="borrowInfoDubboServiceTo3c" interface="com.mobanker.business.dubbo.api.service.BorrowInfoDubboServiceTo3c" timeout="100000" />
+
+    <!-- <上传服务> -->
+    <dubbo:reference id="dubboFileMgtManager" interface="com.mobanker.filemgt.contract.upload.DubboFileMgtManager" timeout="100000" />
+
+    <!--基础数据-->
+    <dubbo:reference id="dubboBaseDataContract"
+                     interface="com.mobanker.basedata.contract.manager.DubboBaseDataContract" timeout="10000"
+                     check="false" />
+
+</beans>

@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.mobanker.shanyidai.syd-service</groupId>
+		<artifactId>jsystem_syd_service</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
+	<artifactId>syd_service_model</artifactId>
+	<name>syd_service_model</name>
+	<url>http://maven.apache.org</url>
+	<properties>
+		<syd.service.version>1.0.0-SNAPSHOT</syd.service.version>
+
+	</properties>
+
+
+	<dependencies>
+		<!-- 本系统模块依赖 -->
+		<dependency>
+			<groupId>com.mobanker.shanyidai.syd-service</groupId>
+			<artifactId>syd_service_common</artifactId>
+			<version>${syd.service.version}</version>
+		</dependency>
+		<!-- 本系统模块依赖 -->
+		<dependency>
+			<groupId>com.mobanker.framework</groupId>
+			<artifactId>mobanker-fx-core</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.mobanker.framework</groupId>
+			<artifactId>mobanker-fx-utils</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.mobanker.framework</groupId>
+			<artifactId>mobanker-fx-encrypt</artifactId>
+		</dependency>
+	</dependencies>
+</project>

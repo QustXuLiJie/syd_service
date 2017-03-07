@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:fx-database="http://www.mobanker.com/schema/fx-database"
+	xmlns:mybatis="http://mybatis.org/schema/mybatis-spring" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd 
+		http://www.mobanker.com/schema/fx-database http://www.mobanker.com/schema/fx-database/fx-database.xsd 
+		http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd 
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+	<!-- ################################## 基本配置 ################################# -->
+	<!-- <bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="ignoreUnresolvablePlaceholders" value="true" />
+		<property name="locations">
+			<list>
+				<value>classpath:configs/jdbc.properties</value>
+			</list>
+		</property>
+	</bean> -->
+
+	<!-- ############################ 配置sqlSessionFactory ####################### -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="shardingDataSource" />
+		<!-- <property name="dataSource" ref="mobanker_demo_0_master" /> -->
+		<property name="mapperLocations"
+			value="classpath:mobanker-demo-dao-mybatis/mappers/*.xml" />
+		<property name="configLocation"
+			value="classpath:mobanker-demo-dao-mybatis/mybatis-config.xml" />
+		<property name="typeAliasesSuperType" value="com.mobanker.framework.entity.BaseEntity" />
+		<!--<property name="plugins"> <list> <bean class="com.mobanker.framework.encrypt.ParameterHandlerInterceptor" 
+			> <property name="encryptManager" ref="encryptManager"/> <property name="encryptRequestDescription" 
+			ref="encryptRequestDescription"/> </bean> <bean class="com.mobanker.framework.encrypt.ResultSetHandlerInterceptor" 
+			> <property name="decryptManager" ref="dencryptManager"/> <property name="decryptRequestDescription" 
+			ref="decryptRequestDescription"/> </bean> </list> </property> -->
+	</bean>
+
+	<bean id="encryptRequestDescription"
+		class="com.mobanker.framework.encrypt.EncryptRequestDescription">
+		<property name="businessCode" value="7201" />
+		<property name="businessType" value="customer" />
+		<property name="type" value="_3DES" />
+	</bean>
+
+	<bean id="decryptRequestDescription"
+		class="com.mobanker.framework.encrypt.DecryptRequestDescription">
+		<property name="businessId" value="1473389148411" />
+		<property name="systemCode" value="customer" />
+		<property name="remoteIp" value="null" />
+	</bean>
+
+
+	<!-- com.mobanker.framework.dao, -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.mobanker.democenter.dao.**" />
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+	</bean>
+
+	<!-- <mybatis:scan base-package="com.mobanker.democenter.database.sharding.mybatis.order.repository"/> -->
+
+	<!-- ############################ 读写分离配置1 ################################## -->
+	<bean id="mobanker_demo_0_master" class="com.alibaba.druid.pool.DruidDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="${jdbc.mobanker_demo_0_master.url}" />
+		<property name="username" value="${jdbc.mobanker_demo_0_master.username}" />
+		<property name="password" value="${jdbc.mobanker_demo_0_master.password}" />
+	</bean>
+	<bean id="mobanker_demo_0_slave_0" class="com.alibaba.druid.pool.DruidDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="${jdbc.mobanker_demo_0_slave_0.url}" />
+		<property name="username" value="${jdbc.mobanker_demo_0_slave_0.username}" />
+		<property name="password" value="${jdbc.mobanker_demo_0_slave_0.password}" />
+	</bean>
+	<bean id="mobanker_demo_0_slave_1" class="com.alibaba.druid.pool.DruidDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="${jdbc.mobanker_demo_0_slave_1.url}" />
+		<property name="username" value="${jdbc.mobanker_demo_0_slave_1.username}" />
+		<property name="password" value="${jdbc.mobanker_demo_0_slave_1.password}" />
+	</bean>
+
+	<!-- ############################ 读写分离配置2 ################################## -->
+	<bean id="mobanker_demo_1_master" class="com.alibaba.druid.pool.DruidDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="${jdbc.mobanker_demo_1_master.url}" />
+		<property name="username" value="${jdbc.mobanker_demo_1_master.username}" />
+		<property name="password" value="${jdbc.mobanker_demo_1_master.password}" />
+	</bean>
+	<bean id="mobanker_demo_1_slave_0" class="com.alibaba.druid.pool.DruidDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="${jdbc.mobanker_demo_1_slave_0.url}" />
+		<property name="username" value="${jdbc.mobanker_demo_1_slave_0.username}" />
+		<property name="password" value="${jdbc.mobanker_demo_1_slave_0.password}" />
+	</bean>
+	<bean id="mobanker_demo_1_slave_1" class="com.alibaba.druid.pool.DruidDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="${jdbc.mobanker_demo_1_slave_1.url}" />
+		<property name="username" value="${jdbc.mobanker_demo_1_slave_1.username}" />
+		<property name="password" value="${jdbc.mobanker_demo_1_slave_1.password}" />
+	</bean>
+
+	<!-- ############################## 读写分离 ################################## -->
+	<fx-database:master-slave-data-source
+		id="mobanker_demo_0" master-data-source-ref="mobanker_demo_0_master"
+		slave-data-sources-ref="mobanker_demo_0_slave_0, mobanker_demo_0_slave_1" />
+	<fx-database:master-slave-data-source
+		id="mobanker_demo_1" master-data-source-ref="mobanker_demo_1_master"
+		slave-data-sources-ref="mobanker_demo_1_slave_0, mobanker_demo_1_slave_1" />
+
+	<!-- ############################## 分片配置 ################################## -->
+	<fx-database:strategy id="databaseStrategy"
+		sharding-columns="USER_ID" algorithm-expression="mobanker_demo_${USER_ID.longValue() % 2}" />
+	<fx-database:strategy id="orderTableStrategy"
+		sharding-columns="ORDER_ID" algorithm-expression="t_order_${ORDER_ID.longValue() % 4}" />
+	<fx-database:strategy id="orderItemTableStrategy"
+		sharding-columns="ORDER_ID"
+		algorithm-class="com.mobanker.democenter.dao.mybatis.order.algorithm.SingleKeyModuloTableShardingAlgorithm" />
+
+	<!-- ############################### 分片数据源 ################################ -->
+	<fx-database:data-source id="shardingDataSource">
+		<fx-database:sharding-rule data-sources="mobanker_demo_0,mobanker_demo_1">
+			<fx-database:table-rules>
+				<fx-database:table-rule logic-table="t_order"
+					actual-tables="t_order_${0..3}" database-strategy="databaseStrategy"
+					table-strategy="orderTableStrategy" />
+				<fx-database:table-rule logic-table="t_order_item"
+					actual-tables="t_order_item_0,t_order_item_1,t_order_item_2,t_order_item_3"
+					database-strategy="databaseStrategy" table-strategy="orderItemTableStrategy" />
+			</fx-database:table-rules>
+		</fx-database:sharding-rule>
+	</fx-database:data-source>
+
+	<!-- ######################## transactionManager 事务控制 ######################## -->
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="shardingDataSource" />
+	</bean>
+	<tx:annotation-driven transaction-manager="transactionManager" />
+
+</beans>

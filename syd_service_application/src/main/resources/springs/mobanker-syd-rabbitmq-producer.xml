@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:util="http://www.springframework.org/schema/util" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit-1.0.xsd">
+
+	<!-- 连接服务配置  -->
+	<rabbit:connection-factory id="connectionFactory"
+		host="${rabbitMQ.host}" port="${rabbitMQ.port}" username="${rabbitMQ.username}"
+		password="${rabbitMQ.password}" />
+	<rabbit:admin connection-factory="connectionFactory" />
+
+	<rabbit:template id="amqpTemplate" connection-factory="connectionFactory"
+		exchange="borrow_exchanges" />
+
+	<!--前隆框架对生产者的简单封装处理 -->
+	<bean id="rabbitmqProducerProxy" class="com.mobanker.framework.rabbitmq.RabbitmqProducerProxy">
+		<property name="rabbitTemplate" ref="amqpTemplate" />
+	</bean>
+
+	<rabbit:direct-exchange name="borrow_exchanges">
+		<rabbit:bindings>
+			<rabbit:binding queue="productOrderNo" key="borrow.apply.notify" />
+		</rabbit:bindings>
+	</rabbit:direct-exchange>
+
+	<!-- 订单中心消息队列名 -->
+	<rabbit:queue name="productOrderNo" durable="true" />
+	<!-- 借款订单RabbitMQ处理 -->
+	<bean id="orderCenterMq"
+		class="com.mobanker.shanyidai.esb.middleware.rabbitmq.producer.BorrowHandleProducer">
+		<property name="rabbitmqProducer" ref="rabbitmqProducerProxy" />
+	</bean>
+
+</beans>

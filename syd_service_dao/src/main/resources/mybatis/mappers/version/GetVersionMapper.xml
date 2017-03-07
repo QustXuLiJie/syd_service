@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mobanker.shanyidai.esb.dao.version.GetVersionMapper">
+    <resultMap id="getMap" type="com.mobanker.shanyidai.esb.model.entity.version.VersionEntity"/>
+
+
+    <!--所有的字段-->
+    <sql id="ALL_COLUMN">
+        id,
+        create_time,
+        create_user,
+        update_time,
+        update_user,
+        status,
+        app_version,
+        app_url,
+        app_desc,
+        update_force,
+        type,
+        channel,
+        min_version,
+        product
+    </sql>
+
+    <!--根据app类型和产品获取版本信息-->
+    <select id="findByProductAndType" resultMap="getMap">
+        select *
+        from mobanker_syd.syd_app_versions
+        where product = #{entity.product} and type = #{entity.type} and status = #{entity.status} and update_force
+        != #{entity.updateForce}
+        order by app_version desc
+        limit 1
+    </select>
+
+
+</mapper>

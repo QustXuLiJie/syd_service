@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans     
+        http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-4.0.xsd
+        http://www.springframework.org/schema/tx
+		http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+		http://www.springframework.org/schema/aop
+		http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+        http://www.springframework.org/schema/data/mongo
+        http://www.springframework.org/schema/data/mongo/spring-mongo-1.5.xsd">
+
+    <!--mongo config-->
+    <!--<mongo:mongo id="mongo" replica-set="${mongodb.url}">-->
+        <!--<mongo:options connections-per-host="${mongo.connections.per.host}"-->
+                       <!--threads-allowed-to-block-for-connection-multiplier="${mongo.threads.allowed.to.block.for.connection.multiplier}"-->
+                       <!--connect-timeout="${mongo.connect.timeout}" max-wait-time="${mongo.max.wait.time}"-->
+                       <!--auto-connect-retry="${mongo.auto.connect.retry}" socket-keep-alive="${mongo.socket.keep.alive}"-->
+                       <!--socket-timeout="${mongo.socket.timeout}" slave-ok="${mongo.slave.ok}"-->
+                       <!--write-number="${mongo.write.number}" write-timeout="${mongo.write.timeout}"-->
+                       <!--write-fsync="${mongo.write.fsync}"/>-->
+    <!--</mongo:mongo>-->
+    <!--<bean id="mappingContext"-->
+          <!--class="org.springframework.data.mongodb.core.mapping.MongoMappingContext"/>-->
+    <!--<bean id="defaultMongoTypeMapper"-->
+          <!--class="org.springframework.data.mongodb.core.convert.DefaultMongoTypeMapper">-->
+        <!--<constructor-arg name="typeKey">-->
+            <!--<null/>-->
+        <!--</constructor-arg>-->
+    <!--</bean>-->
+    <!--<bean id="mongoDbFactory"-->
+          <!--class="org.springframework.data.mongodb.core.SimpleMongoDbFactory">-->
+        <!--<constructor-arg ref="mongo"/>-->
+        <!--<constructor-arg name="databaseName" value="${mongodb.databaseName}"/>-->
+    <!--</bean>-->
+
+    <!--<bean id="mappingMongoConverter"-->
+          <!--class="org.springframework.data.mongodb.core.convert.MappingMongoConverter">-->
+        <!--<constructor-arg name="mappingContext" ref="mappingContext"/>-->
+        <!--<property name="typeMapper" ref="defaultMongoTypeMapper"/>-->
+        <!--<constructor-arg name="mongoDbFactory" ref="mongoDbFactory"/>-->
+    <!--</bean>-->
+
+    <!--<bean id="mongodbReadPreference" class="com.mongodb.ReadPreference"-->
+          <!--factory-method="secondaryPreferred"/>-->
+    <!--<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">-->
+        <!--<property name="readPreference" ref="mongodbReadPreference"/>-->
+        <!--<constructor-arg name="mongoConverter" ref="mappingMongoConverter"/>-->
+        <!--<constructor-arg name="mongoDbFactory" ref="mongoDbFactory"/>-->
+    <!--</bean>-->
+    <mongo:db-factory id="mongoDbFactory" dbname="${mongodb.databaseName}" host="${mongodb.url}" port="${mongodb.port}" />
+    <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+        <constructor-arg ref="mongoDbFactory" />
+        <property name="writeConcern" value="SAFE" />
+    </bean>
+
+</beans>

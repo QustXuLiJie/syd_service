@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:util="http://www.springframework.org/schema/util" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit-1.0.xsd">
+
+
+    <!--<rabbit:connection-factory id="connectionFactory"-->
+                               <!--host="192.168.0.210" port="5672" username="guest"-->
+                               <!--password="guest"/>-->
+    <rabbit:connection-factory id="connectionFactory"
+                               host="${rabbitMQ.host}" port="${rabbitMQ.port}" username="${rabbitMQ.username}"
+                               password="${rabbitMQ.password}"/>
+    <rabbit:admin connection-factory="connectionFactory"/>
+
+    <rabbit:listener-container
+            connection-factory="connectionFactory" acknowledge="auto" concurrency="10">
+        <!--<rabbit:listener queues="orderInfoQueueToSyd" ref="rabbitmqConsumerProxy"/>-->
+        <!--<rabbit:listener queues="auth.kdxf.audio.callback.queue" ref="voiceAuthConsumerProxy"/>-->
+    </rabbit:listener-container>
+
+
+    <!-- 订单中心订单状态变更通知 -->
+    <rabbit:queue name="orderInfoQueueToSyd" durable="true"/>
+    <bean id="rabbitmqConsumerProxy" class="com.mobanker.framework.rabbitmq.RabbitmqConsumerProxy">
+        <property name="channelAwareMessageProcesser" ref="orderProcesser"/>
+    </bean>
+    <bean id="orderProcesser"
+          class="com.mobanker.shanyidai.esb.middleware.rabbitmq.consumer.OrderStatusConsumer"/>
+
+    <!-- 认证系统 语音解析结果consumer-->
+    <rabbit:queue name="auth.kdxf.audio.callback.queue" durable="true"/>
+    <bean id="voiceAuthConsumerProxy" class="com.mobanker.framework.rabbitmq.RabbitmqConsumerProxy">
+        <property name="channelAwareMessageProcesser" ref="voiceProcesser"/>
+    </bean>
+    <bean id="voiceProcesser"
+          class="com.mobanker.shanyidai.esb.middleware.rabbitmq.consumer.VoiceTranslateConsumer"/>
+
+</beans>

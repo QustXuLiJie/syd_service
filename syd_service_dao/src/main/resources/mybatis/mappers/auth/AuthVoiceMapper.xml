@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mobanker.shanyidai.esb.dao.auth.AuthVoiceMapper">
+    <resultMap id="getMap" type="com.mobanker.shanyidai.esb.model.entity.auth.AuthVoiceEntity"/>
+    <!--更新条件-->
+    <sql id="updateCondition">
+        <if test="entity.billNo != null and entity.billNo != ''">
+            bill_no = #{entity.billNo},
+        </if>
+        <if test="entity.uploadSid != null and entity.uploadSid != ''">
+            upload_sid = #{entity.uploadSid},
+        </if>
+        <if test="entity.skuNumber != null and entity.skuNumber != ''">
+            sku_number = #{entity.skuNumber},
+        </if>
+        <if test="entity.audioId != null and entity.audioId != ''">
+            audio_id = #{entity.audioId},
+        </if>
+        <if test="entity.fileName != null and entity.fileName != ''">
+            file_name = #{entity.fileName},
+        </if>
+        <if test="entity.voiceLast != null and entity.voiceLast != ''">
+            voice_last = #{entity.voiceLast},
+        </if>
+        <if test="entity.fileSize != null and entity.fileSize != ''">
+            file_size = #{entity.fileSize},
+        </if>
+        <if test="entity.filePath != null and entity.filePath != ''">
+            file_path = #{entity.filePath},
+        </if>
+        <if test="entity.uploadTime != null">
+            upload_time = #{entity.uploadTime},
+        </if>
+        <if test="entity.mqCallTime != null">
+            mq_call_time = #{entity.mqCallTime},
+        </if>
+        <if test="entity.voiceText != null and entity.voiceText != ''">
+            voice_text = #{entity.voiceText},
+        </if>
+        <if test="entity.status != null and entity.status != ''">
+            status = #{entity.status},
+        </if>
+        <if test="entity.mqResultStatus != null and entity.mqResultStatus != ''">
+            mq_result_status = #{entity.mqResultStatus},
+        </if>
+        <if test="entity.transDuration != null">
+            trans_duration = #{entity.transDuration},
+        </if>
+        <if test="entity.esCompareTime != null">
+            es_compare_time = #{entity.esCompareTime},
+        </if>
+        <if test="entity.textPassRate != null and entity.textPassRate != ''">
+            text_pass_rate = #{entity.textPassRate},
+        </if>
+        <if test="entity.keyWordPassRate != null and entity.keyWordPassRate != ''">
+            key_word_pass_rate = #{entity.keyWordPassRate},
+        </if>
+        <if test="entity.esResult != null and entity.esResult != ''">
+            es_result = #{entity.esResult},
+        </if>
+        <if test="entity.updateTime != null">
+            update_time = #{entity.updateTime},
+        </if>
+        <if test="entity.updateUser != null">
+            update_user = #{entity.updateUser},
+        </if>
+    </sql>
+    <!--所有的字段-->
+    <sql id="ALL_COLUMN">
+        id,
+        user_id,
+        order_no,
+        upload_sid,
+        bill_no,
+        sku_number,
+        audio_id,
+        voice_last,
+        file_size,
+        file_path,
+        upload_begin_time,
+        upload_time,
+        upload_duration,
+        mq_call_time,
+        file_name,
+        voice_text,
+        mq_result_status,
+        trans_duration,
+        es_compare_time,
+        text_pass_rate,
+        key_word_pass_rate,
+        es_result,
+        status,
+        create_time,
+        create_user,
+        update_time,
+        ask_user_name,
+        ask_user_phone,
+        update_user,
+        audit_remark,
+        supervisor_remark,
+        audit_user_name,
+        audit_time,
+        before_audit_status,
+        audit_user_id,
+        detail_reason,
+        default_text_id
+    </sql>
+
+    <!--根据订单号获取处理进度-->
+    <select id="findByOrderNo" resultMap="getMap">
+        select
+        <include refid="ALL_COLUMN"/>
+        from mobanker_syd.syd_auth_voice_record
+        where order_no = #{orderNo}
+        limit 1
+    </select>
+    <!--更新语音识别进度记录-->
+    <update id="updateByOrderNo">
+        update mobanker_syd.syd_auth_voice_record
+        <set>
+            <include refid="updateCondition"/>
+        </set>
+        where order_no = #{entity.orderNo}
+    </update>
+    <!--查询用户语音识别进度 最后一次记录-->
+    <select id="findLastByUserId" resultMap="getMap">
+        select
+        <include refid="ALL_COLUMN"/>
+        from mobanker_syd.syd_auth_voice_record
+        where user_id = #{userId}
+        order by id desc
+        limit 1
+    </select>
+    <!--查询当天用户语音识别次数-->
+    <select id="findTodayListByUserId" resultMap="getMap">
+        select
+        <include refid="ALL_COLUMN"/>
+        from mobanker_syd.syd_auth_voice_record
+        where user_id = #{userId}
+        and create_time >= DATE_FORMAT(now(),'%Y/%m/%d')
+    </select>
+</mapper>

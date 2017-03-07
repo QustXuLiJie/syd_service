@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mobanker.shanyidai.esb.dao.auth.AuthFaceRecordMapper">
+    <resultMap id="getMap" type="com.mobanker.shanyidai.esb.model.entity.auth.AuthFaceRecordEntity"/>
+    <!--更新条件-->
+    <sql id="updateCondition">
+        <if test="entity.process != null and entity.process != ''">
+            process = #{entity.process},
+        </if>
+        <if test="entity.status != null and entity.status != ''">
+            status = #{entity.status},
+        </if>
+        <if test="entity.reason != null and entity.reason != ''">
+            reason = #{entity.reason},
+        </if>
+        <if test="entity.score != null and entity.score != ''">
+            score = #{entity.score},
+        </if>
+        <if test="entity.hackScore != null and entity.hackScore != ''">
+            hack_score = #{entity.hackScore},
+        </if>
+        <if test="entity.verifyScore != null and entity.verifyScore != ''">
+            verify_score = #{entity.verifyScore},
+        </if>
+        <if test="entity.imageId != null and entity.imageId != ''">
+            image_id = #{entity.imageId},
+        </if>
+        <if test="entity.channel != null and entity.channel != ''">
+            channel = #{entity.channel},
+        </if>
+        <if test="entity.hackReqId != null and entity.hackReqId != ''">
+            hack_req_id = #{entity.hackReqId},
+        </if>
+        <if test="entity.hackSid != null and entity.hackSid != ''">
+            hack_sid = #{entity.hackSid},
+        </if>
+        <if test="entity.verifyReqId != null and entity.verifyReqId != ''">
+            verify_req_id = #{entity.verifyReqId},
+        </if>
+        <if test="entity.verifySid != null and entity.verifySid != ''">
+            verify_sid = #{entity.verifySid},
+        </if>
+        <if test="entity.hackBeginTime != null">
+            hack_begin_time = #{entity.hackBeginTime},
+        </if>
+        <if test="entity.hackEndTime != null">
+            hack_end_time = #{entity.hackEndTime},
+        </if>
+        <if test="entity.hackDuration != null">
+            hack_duration = #{entity.hackDuration},
+        </if>
+        <if test="entity.verifyBeginTime != null">
+            verify_begin_time = #{entity.verifyBeginTime},
+        </if>
+        <if test="entity.verifyEndTime != null">
+            verify_end_time = #{entity.verifyEndTime},
+        </if>
+        <if test="entity.verifyDuration != null">
+            verify_duration = #{entity.verifyDuration},
+        </if>
+        <if test="entity.realName != null and entity.realName != ''">
+            real_name = #{entity.realName},
+        </if>
+        <if test="entity.idCardNo != null and entity.idCardNo != ''">
+            id_card_no = #{entity.idCardNo},
+        </if>
+        <if test="entity.errorMsg != null and entity.errorMsg != ''">
+            error_msg = #{entity.errorMsg},
+        </if>
+        <if test="entity.updateTime != null">
+            update_time = #{entity.updateTime},
+        </if>
+        <if test="entity.updateUser != null">
+            update_user = #{entity.updateUser},
+        </if>
+    </sql>
+    <!--所有的字段-->
+    <sql id="ALL_COLUMN">
+        id,
+        user_id,
+        liveness_data_id,
+        process,
+        status,
+        reason,
+        file_path,
+        score,
+        hack_score,
+        verify_score,
+        image_id,
+        channel,
+        real_name,
+        id_card_no,
+        upload_req_id,
+        upload_sid,
+        upload_begin_time,
+        upload_end_time,
+        upload_duration,
+        hack_req_id,
+        hack_sid,
+        hack_begin_time,
+        hack_end_time,
+        hack_duration,
+        verify_req_id,
+        verify_sid,
+        verify_begin_time,
+        verify_end_time,
+        verify_duration,
+        error_msg,
+        create_time,
+        create_user,
+        update_time,
+        update_user
+    </sql>
+
+    <!--根据订单号查询人脸识别记录-->
+    <select id="findByDataId" resultMap="getMap">
+        select
+        <include refid="ALL_COLUMN"/>
+        from mobanker_syd.syd_auth_face_record
+        where liveness_data_id = #{dataId}
+        limit 1
+    </select>
+    <!--更新人脸识别记录-->
+    <update id="updateByDataId">
+        update mobanker_syd.syd_auth_face_record
+        <set>
+            <include refid="updateCondition"/>
+        </set>
+        where liveness_data_id = #{entity.livenessDataId}
+    </update>
+    <!--查询用户人脸识别记录 最后一次记录-->
+    <select id="findLastByUserId" resultMap="getMap">
+        select
+        <include refid="ALL_COLUMN"/>
+        from mobanker_syd.syd_auth_face_record
+        where user_id = #{userId}
+        order by id desc
+        limit 1
+    </select>
+
+    <!--保存人脸识别生成图片和认证记录关联-->
+    <insert id="saveRefFacePic">
+        insert into mobanker_syd.syd_ref_face_pic
+        (user_id, liveness_data_id, pic_url, create_time, create_user,update_time, update_user) values
+        <if test="refBean.picPath != null and refBean.picPath.size() >0">
+            <foreach collection="refBean.picPath" item="item" index="index"
+                     open="" close="" separator=",">
+                (#{refBean.userId}, #{refBean.livenessDataId}, #{item}, now(), 'system', now(), 'system')
+            </foreach>
+        </if>
+    </insert>
+
+
+    <!--查询人脸识别记录的图片-->
+    <select id="findRefPicByDataId" resultType="java.lang.String">
+        SELECT pic_url
+        FROM mobanker_syd.syd_ref_face_pic
+        WHERE liveness_data_id =#{livenessDataId}
+    </select>
+    <!--查询当天用户人脸识别次数-->
+    <select id="findTodayListByUserId" resultMap="getMap">
+        select
+        <include refid="ALL_COLUMN"/>
+        from mobanker_syd.syd_auth_face_record
+        where user_id = #{userId}
+        and create_time >= DATE_FORMAT(now(),'%Y/%m/%d')
+    </select>
+
+</mapper>

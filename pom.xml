@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <properties>
+        <project.encoding>UTF-8</project.encoding>
+        <spring.version>4.3.2.RELEASE</spring.version>
+        <spring.core.version>4.3.2.1</spring.core.version>
+        <spring.amqp.version>1.6.0.RELEASE</spring.amqp.version>
+        <aliyun.openservices.version>1.2.3</aliyun.openservices.version>
+        <rabbitmq.version>3.5.6</rabbitmq.version>
+        <activemq.core.version>5.7.0</activemq.core.version>
+        <activemq.client.version>5.11.1</activemq.client.version>
+        <cat.monitor.version>0.0.6</cat.monitor.version>
+        <log4j.version>1.2.17</log4j.version>
+        <lombok.version>1.16.4</lombok.version>
+        <alibaba.dubbo.version>2.8.4</alibaba.dubbo.version>
+        <zkclient.version>0.1</zkclient.version>
+        <el.api.version>2.2</el.api.version>
+        <hessian.version>4.0.7</hessian.version>
+        <log4j-2.version>2.0</log4j-2.version>
+        <log4j-2.jdbc.version>1.16</log4j-2.jdbc.version>
+        <mobanker-customer.version>1.0-SNAPSHOT</mobanker-customer.version>
+    </properties>
+
+    <parent>
+        <groupId>com.mobanker.framework</groupId>
+        <artifactId>mobanker-framework</artifactId>
+        <version>2.1.7-SNAPSHOT</version>
+    </parent>
+
+    <groupId>com.mobanker.shanyidai.syd-service</groupId>
+    <artifactId>jsystem_syd_service</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>syd_service</module>
+        <module>syd_service_business</module>
+        <module>syd_service_dao</module>
+        <module>syd_service_common</module>
+        <module>syd_service_model</module>
+        <module>syd_service_call</module>
+        <module>syd_service_web</module>
+        <module>syd_service_api</module>
+        <module>syd_service_application</module>
+        <module>syd_dubbo_service</module>
+        <module>syd_service_middleware</module>
+    </modules>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.mobanker.framework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>${spring.core.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.mobanker.framework</groupId>
+            <artifactId>mobanker-fx-ee</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.mobanker.framework</groupId>
+                    <artifactId>mobanker-fx-rabbitmq</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>com.mobanker.framework</groupId>
+            <artifactId>mobanker-fx-utils</artifactId>
+        </dependency>
+        <!-- mobanker jar begin -->
+        <!--大数据埋点相关-->
+        <dependency>
+            <groupId>com.mobanker.bigdata.sensor</groupId>
+            <artifactId>bigdata-sensor-microsite-contract</artifactId>
+            <version>1.0.2-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.mobanker.bigdata.sensor</groupId>
+            <artifactId>bigdata-sensor-constants-contract</artifactId>
+            <version>1.0.2-SNAPSHOT</version>
+        </dependency>
+        <!--消息服务-->
+        <!--<dependency>-->
+            <!--<groupId>com.mobanker.message</groupId>-->
+            <!--<artifactId>mobanker-message-contract</artifactId>-->
+            <!--<version>1.0.5-SNAPSHOT</version>-->
+        <!--</dependency>-->
+        <!--用户中心相关-->
+        <dependency>
+            <groupId>com.mobanker.customer.creditinfo</groupId>
+            <artifactId>mobanker-customer-creditinfo-contract</artifactId>
+            <version>${mobanker-customer.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.mobanker.customer.searchengine</groupId>
+            <artifactId>mobanker-customer-searchengine-contract</artifactId>
+            <version>${mobanker-customer.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.mobanker.customer.contactinfo</groupId>
+            <artifactId>mobanker-customer-contactinfo-contract</artifactId>
+            <version>${mobanker-customer.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.mobanker.customer.cardinfo</groupId>
+            <artifactId>mobanker-customer-cardinfo-contract</artifactId>
+            <version>${mobanker-customer.version}</version>
+        </dependency>
+        <!--基础数据服务-->
+        <dependency>
+            <groupId>com.mobanker.basedata</groupId>
+            <artifactId>mobanker-basedata-contract</artifactId>
+            <version>1.0.2-SNAPSHOT</version>
+        </dependency>
+        <!--配置系统-->
+        <dependency>
+            <groupId>com.mobanker</groupId>
+            <artifactId>config-api</artifactId>
+            <version>1.2.6-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.mobanker.common</groupId>
+                    <artifactId>mobanker-core</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!--财务系统-->
+        <dependency>
+            <groupId>com.mobanker.financial</groupId>
+            <artifactId>financial-dubboapi</artifactId>
+            <version>1.6.6-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.mobanker.business.parent.dubbo</groupId>
+            <artifactId>business_dubbo</artifactId>
+            <version>1.0.9-SNAPSHOT</version>
+        </dependency>
+
+        <!-- mobanker jar end -->
+
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-mongodb</artifactId>
+            <version>1.9.4.RELEASE</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>${log4j-2.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${log4j-2.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-1.2-api</artifactId>
+            <version>${log4j-2.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.bgee.log4jdbc-log4j2</groupId>
+            <artifactId>log4jdbc-log4j2-jdbc4.1</artifactId>
+            <version>${log4j-2.jdbc.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.el</groupId>
+            <artifactId>el-api</artifactId>
+            <version>${el.api.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-fileupload</groupId>
+            <artifactId>commons-fileupload</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.mobanker.filemgt</groupId>
+            <artifactId>mobanker-filemgt-contract</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+        </plugins>
+        <pluginManagement>
+
+            <plugins>
+                <!-- resource插件, 设定编码 -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <configuration>
+                        <includeEmptyDirs>true</includeEmptyDirs>
+                        <encoding>${project.encoding}</encoding>
+                    </configuration>
+                </plugin>
+
+                <!-- jar相关插件 -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <configuration>
+                        <archive>
+                            <manifest>
+                                <!--<addClasspath>true</addClasspath> -->
+                                <!--<classpathPrefix>lib/</classpathPrefix> -->
+                                <!--<mainClass>com.mobanker.shanyidai.esb.application.Server</mainClass> -->
+                                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                                <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                            </manifest>
+                        </archive>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-shade-plugin</artifactId>
+                    <version>2.3</version>
+                    <executions>
+                        <execution>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>shade</goal>
+                            </goals>
+                            <configuration>
+                                <transformers>
+                                    <transformer
+                                            implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                                    <transformer
+                                            implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                        <mainClass>com.mobanker.shanyidai.esb.application.Server</mainClass>
+                                    </transformer>
+                                    <transformer
+                                            implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                        <resource>META-INF/spring.handlers</resource>
+                                    </transformer>
+                                    <transformer
+                                            implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                        <resource>META-INF/spring.schemas</resource>
+                                    </transformer>
+                                </transformers>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                <!-- clean插件 -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-clean-plugin</artifactId>
+                </plugin>
+
+                <!-- install插件 -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-install-plugin</artifactId>
+                </plugin>
+
+                <!-- deploy插件 -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                </plugin>
+
+                <!-- dependency插件 -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <id>attach-sources</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>jar-no-fork</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+            </plugins>
+        </pluginManagement>
+    </build>
+</project>

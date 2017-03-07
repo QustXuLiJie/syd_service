@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <dubbo:application name="${dubbo.application}" owner="shanyidai"/>
+    <dubbo:registry protocol="zookeeper" address="${dubbo.zk.url}" timeout="${dubbo.zk.timeout}"/>
+    <dubbo:monitor protocol="registry"/>
+    <dubbo:protocol name="dubbo" port="${dubbo.port}"/>
+    <dubbo:protocol name="hessian" port="${dubbo.hessian.port}"/>
+    <!-- 自定义拦截器 -->
+    <dubbo:provider filter="eventlog"/>
+
+    <!-- 扫描注解包路径，多个包用逗号分隔，不填pacakge表示扫描当前ApplicationContext中所有的类 -->
+    <!--<dubbo:annotation package="com.mobanker.shanyidai.dubbo.service" />-->
+    <!--消息服务-->
+    <bean id="messageDubboService" class="com.mobanker.shanyidai.esb.service.message.MessageServiceImpl"/>
+    <dubbo:service interface="com.mobanker.shanyidai.dubbo.service.message.MessageDubboService"
+                   ref="messageDubboService" protocol="dubbo" timeout="10000" version="1.0.1"/>
+    <!--账户相关-->
+    <bean id="accountDubboService" class="com.mobanker.shanyidai.esb.service.user.AccountServiceImpl"/>
+    <dubbo:service interface="com.mobanker.shanyidai.dubbo.service.user.AccountDubboService"
+                   ref="accountDubboService" protocol="dubbo" timeout="10000" version="1.0.1"/>
+
+    <bean id="userDubboService" class="com.mobanker.shanyidai.esb.service.user.UserServiceImpl"/>
+    <dubbo:service interface="com.mobanker.shanyidai.dubbo.service.user.UserDubboService"
+                   ref="userDubboService" protocol="dubbo" timeout="10000" version="1.0.1"/>
+
+    <bean id="userSessionService" class="com.mobanker.shanyidai.esb.service.user.UserSessionServiceImpl"/>
+    <dubbo:service interface="com.mobanker.shanyidai.dubbo.service.user.UserSessionService"
+                   ref="userSessionService" protocol="dubbo" timeout="10000" version="1.0.1"/>
+
+    <bean id="userAuthDubboService" class="com.mobanker.shanyidai.esb.service.auth.AuthDubboServiceImpl"/>
+    <dubbo:service interface="com.mobanker.shanyidai.dubbo.service.auth.AuthDubboService"
+                   ref="userAuthDubboService" protocol="dubbo" timeout="10000" version="1.0.1"/>
+
+    <bean id="userContactDubboService" class="com.mobanker.shanyidai.esb.service.user.UserContactDubboServiceImpl"/>
+    <dubbo:service interface="com.mobanker.shanyidai.dubbo.service.user.UserContactDubboService"
+                   ref="userContactDubboService" protocol="dubbo" timeout="10000" version="1.0.1"/>
+    <!--银行卡相关-->
+    <bean id="bankCardDubboService" class="com.mobanker.shanyidai.esb.service.user.BankCardServiceImpl"/>
+    <dubbo:service interface="com.mobanker.shanyidai.dubbo.service.user.BankCardDubboService"
+                   ref="bankCardDubboService" protocol="dubbo" timeout="10000" version="1.0.1"/>
+    <bean id="productDubboService" class="com.mobanker.shanyidai.esb.service.product.ProductDubboServiceImpl"/>
+    <dubbo:service interface="com.mobanker.shanyidai.dubbo.service.product.ProductDubboService"
+                   ref="productDubboService" protocol="dubbo" timeout="10000" version="1.0.1"/>
+    <!--借还款-->
+    <bean id="payBackDubboService" class="com.mobanker.shanyidai.esb.service.payback.PayBackServiceImpl"/>
+    <dubbo:service interface="com.mobanker.shanyidai.dubbo.service.payback.PayBackDubboService"
+                   ref="payBackDubboService" protocol="dubbo" timeout="10000" version="1.0.1"/>
+    <bean id="borrowDubboService" class="com.mobanker.shanyidai.esb.service.borrow.BorrowServiceImpl"/>
+    <dubbo:service interface="com.mobanker.shanyidai.dubbo.service.borrow.BorrowDubboService"
+                   ref="borrowDubboService" protocol="dubbo" timeout="10000" version="1.0.1"/>
+    <!-- 数据字典 -->
+    <bean id="dictionaryDubboService" class="com.mobanker.shanyidai.esb.service.system.DataDictionaryDubboServiceImpl"/>
+    <dubbo:service interface="com.mobanker.shanyidai.dubbo.service.system.DataDictionaryDubboService"
+                   ref="dictionaryDubboService" protocol="dubbo" timeout="10000" version="1.0.1"/>
+
+    <!-- 上传文件 -->
+    <bean id="uploadFileDubboService" class="com.mobanker.shanyidai.esb.service.upload.UploadServiceImpl"/>
+    <dubbo:service interface="com.mobanker.shanyidai.dubbo.service.upload.UploadFileDubboService"
+                   ref="uploadFileDubboService" protocol="hessian" timeout="10000" version="1.0.1"/>
+
+    <!-- 日志记录 -->
+    <bean id="apiServiceLogDubboService" class="com.mobanker.shanyidai.esb.service.log.ApiServiceLogServiceImpl"/>
+    <dubbo:service interface="com.mobanker.shanyidai.dubbo.service.log.ApiServiceLogDubboService"
+                   ref="apiServiceLogDubboService" protocol="dubbo" timeout="10000" version="1.0.1"/>
+    <bean id="esbServiceLogDubboService" class="com.mobanker.shanyidai.esb.service.log.EsbServiceLogServiceImpl" />
+    <bean id="esbCommonBusiness" class="com.mobanker.shanyidai.esb.business.common.EsbCommonBusinessImpl" />
+    <!-- 基础数据 -->
+    <bean id="baseDataDubboService" class="com.mobanker.shanyidai.esb.service.basedata.BaseDataServiceImpl"/>
+    <dubbo:service interface="com.mobanker.shanyidai.dubbo.service.basedata.BaseDataDubboService"
+                   ref="baseDataDubboService" protocol="dubbo" timeout="10000" version="1.0.1"/>
+
+    <!-- 数据采集 -->
+    <bean id="gatherDubboService" class="com.mobanker.shanyidai.esb.service.gather.GatherServiceImpl"/>
+    <dubbo:service interface="com.mobanker.shanyidai.dubbo.service.gather.GatherDubboService"
+                   ref="gatherDubboService" protocol="dubbo" timeout="10000" version="1.0.1"/>
+    <!-- 识别-->
+    <bean id="recognizeDubboService" class="com.mobanker.shanyidai.esb.service.auth.RecognizeDubboServiceImpl"/>
+    <dubbo:service interface="com.mobanker.shanyidai.dubbo.service.auth.RecognizeDubboService"
+                   ref="recognizeDubboService" protocol="hessian" timeout="10000" version="1.0.1"/>
+
+    <!-- 用户默认银行卡 -->
+    <bean id="defaultBankDubboService" class="com.mobanker.shanyidai.esb.service.system.UserDefaultBankDubboServiceImpl"/>
+    <dubbo:service interface="com.mobanker.shanyidai.dubbo.service.system.UserDefaultBankDubboService"
+                   ref="defaultBankDubboService" protocol="dubbo" timeout="10000" version="1.0.1"/>
+<!-- 人脸识别 -->
+    <bean id="authFaceDubboService" class="com.mobanker.shanyidai.esb.service.auth.AuthFaceServiceImpl"/>
+    <dubbo:service interface="com.mobanker.shanyidai.dubbo.service.auth.AuthFaceDubboService"
+                   ref="authFaceDubboService" protocol="hessian" timeout="10000" version="1.0.1"/>
+    <!--app版本更新-->
+    <bean id="versionDubboService" class="com.mobanker.shanyidai.esb.service.version.VersionServiceImpl"/>
+    <dubbo:service interface="com.mobanker.shanyidai.dubbo.service.version.VersionDubboService"
+                   ref="versionDubboService" protocol="dubbo" timeout="10000" version="1.0.1"/>
+</beans>

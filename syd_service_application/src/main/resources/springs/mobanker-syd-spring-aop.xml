@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+	<bean class="com.mobanker.framework.tracking.EEAspect" />
+
+	<aop:config />
+	<aop:aspectj-autoproxy />
+
+	<context:annotation-config />
+
+	<!-- 扫描Framework -->
+	<context:component-scan
+		base-package="com.mobanker.framework.mybatis.**,com.mobanker.framework.bussiness.**">
+		<context:exclude-filter type="annotation"
+			expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+
+	<!--扫描全局uuid -->
+	<!--<context:component-scan base-package="com.mobanker.framework.uuid"/> -->
+	<context:component-scan base-package="com.mobanker.shanyidai.esb.call"/>
+	<!-- 扫描Business -->
+	<context:component-scan base-package="com.mobanker.shanyidai.esb.business" />
+	<!-- 自动扫描 -->
+	<context:component-scan base-package="com.mobanker.shanyidai.esb.service"
+							name-generator="com.mobanker.framework.spring.mvc.FullPackageBeanNameGenerator">
+		<context:exclude-filter type="annotation"
+								expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+	<!-- 扫描Controller -->
+	<context:component-scan base-package="com.mobanker.shanyidai.esb.controller"
+							name-generator="com.mobanker.framework.spring.mvc.FullPackageBeanNameGenerator">
+		<context:exclude-filter type="annotation"
+								expression="org.springframework.stereotype.Service" />
+	</context:component-scan>
+</beans>
